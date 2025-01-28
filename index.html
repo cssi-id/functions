@@ -4,162 +4,60 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TikTok Video Downloader</title>
-  <style>
-    /* General Styling */
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f9;
-      color: #333;
-    }
-
-    h1 {
-      text-align: center;
-      color: #ff4b5c;
-      margin-top: 20px;
-    }
-
-    /* Form Styling */
-    form {
-      margin: 20px;
-      padding: 15px;
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    input[type="text"] {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      border: 2px solid #ddd;
-      border-radius: 5px;
-      font-size: 16px;
-      box-sizing: border-box;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      background-color: #ff4b5c;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #ff6b7d;
-    }
-
-    /* Result Styling */
-    .result {
-      background-color: #fff;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      margin-top: 20px;
-      text-align: center;
-    }
-
-    .result a {
-      color: #007bff;
-      text-decoration: none;
-    }
-
-    .result a:hover {
-      text-decoration: underline;
-    }
-
-    /* Error Styling */
-    .error {
-      color: red;
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    /* Mobile Specific Styling */
-    @media only screen and (max-width: 600px) {
-      h1 {
-        font-size: 24px;
-      }
-
-      form {
-        margin: 10px;
-        padding: 15px;
-      }
-
-      input[type="text"] {
-        padding: 10px;
-        font-size: 14px;
-      }
-
-      button {
-        padding: 10px;
-        font-size: 14px;
-      }
-
-      .result {
-        padding: 10px;
-      }
-
-      .error {
-        font-size: 14px;
-      }
-    }
-
-    /* Large Mobile Devices (e.g., iPhone Plus, Galaxy Note) */
-    @media only screen and (min-width: 601px) and (max-width: 800px) {
-      h1 {
-        font-size: 28px;
-      }
-
-      form {
-        margin: 20px;
-        padding: 15px;
-      }
-
-      input[type="text"] {
-        padding: 12px;
-        font-size: 15px;
-      }
-
-      button {
-        padding: 12px;
-        font-size: 15px;
-      }
-
-      .result {
-        padding: 15px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="./css/styles.css">
+  <link rel="stylesheet" href="./css/styles-mobile.css">
+  <link rel="shortcut icon" href="./img/icont.png" type="image/x-icon">
 </head>
 <body>
+  <div class="container">
+    
+    <h1 class="Name">TikTok Video Downloader</h1>
+    <br>
+    <!-- form -->
+    <form id="tiktokForm">
+      <input type="text" id="url" name="url" placeholder="Enter TikTok Video URL" required />
+      <button type="submit">Download Video</button>
+      <script>
+        document.getElementById('url').addEventListener('input', function () {
+          document.getElementById('error').style.display = 'none';
+        });
+      </script>      
+    </form>
+    <!-- result -->
+    <div id="result" class="result" style="display: none;">
+      <h2>Video Download Links</h2>
+      <p><strong>Video URL (SD):</strong> <a id="videoUrl" href="./thanku.html" target="_blank">Download</a></p>
+      <script>
+        document.getElementById('videoUrl').addEventListener('click', function () {
+          window.location.href = './index.html';
+        });
+      </script>
+      <p><strong>Video URL (HD):</strong> <a id="videoHD" href="./thanku.html" target="_blank">Download</a></p>
+      <script>
+        document.getElementById('videoHD').addEventListener('click', function () {
+          window.location.href = './index.html';
+        });
+      </script>
+    </div>
 
-  <h1>TikTok Video Downloader</h1>
+    <div id="error" class="error" style="display: none;"></div> 
+    <!-- Popup gear container -->
+    <div id="popup" class="popup hidden">
+      <div class="gear"></div>
+    </div>
 
-  <form id="tiktokForm">
-    <input type="text" id="url" name="url" placeholder="Enter TikTok Video URL" required />
-    <button type="submit">Download Video</button>
-  </form>
-
-  <div id="result" class="result" style="display: none;">
-    <h3>Video Download Links</h3>
-    <p><strong>Video URL (SD):</strong> <a id="videoUrl" href="#" target="_blank">Download</a></p>
-    <p><strong>Video URL (HD):</strong> <a id="videoHD" href="#" target="_blank">Download</a></p>
   </div>
-
-  <div id="error" class="error" style="display: none;"></div>
-
+  <script src="./js/loading.js"></script>
   <script>
     document.getElementById('tiktokForm').addEventListener('submit', async function(event) {
       event.preventDefault();
+      const popup = document.getElementById('popup');
       const url = document.getElementById('url').value;
-
+      // Show the popup
+      popup.classList.remove('hidden');
+    
       try {
+    
         const response = await fetch('/.netlify/functions/api/', {
           method: 'POST',
           headers: {
@@ -167,26 +65,35 @@
           },
           body: JSON.stringify({ url }),
         });
-
+    
         const data = await response.json();
-
+    
         if (data.status === 'success') {
           document.getElementById('result').style.display = 'block';
           document.getElementById('videoUrl').href = data.videoUrl;
           document.getElementById('videoHD').href = data.videoHD;
           document.getElementById('error').style.display = 'none';
+          setTimeout(() => {
+            popup.classList.add('hidden');
+          }, 3000);
         } else {
           document.getElementById('error').innerText = data.error || 'An error occurred';
           document.getElementById('error').style.display = 'block';
           document.getElementById('result').style.display = 'none';
+          setTimeout(() => {
+            popup.classList.add('hidden');
+          }, 3000);
         }
       } catch (error) {
-        document.getElementById('error').innerText = 'Failed to download video';
+        document.getElementById('error').innerText = 'Failed to download video try another url';
         document.getElementById('error').style.display = 'block';
         document.getElementById('result').style.display = 'none';
+        setTimeout(() => {
+          popup.classList.add('hidden');
+        }, 3000);
       }
     });
+    
   </script>
-
 </body>
 </html>
