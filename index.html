@@ -26,18 +26,8 @@
     <!-- result -->
     <div id="result" class="result" style="display: none;">
       <h2>Video Download Links</h2>
-      <p><strong>Video URL (SD):</strong> <a id="videoUrl" href="./thanku.html" target="_blank">Download</a></p>
-      <script>
-        document.getElementById('videoUrl').addEventListener('click', function () {
-          window.location.href = './index.html';
-        });
-      </script>
-      <p><strong>Video URL (HD):</strong> <a id="videoHD" href="./thanku.html" target="_blank">Download</a></p>
-      <script>
-        document.getElementById('videoHD').addEventListener('click', function () {
-          window.location.href = './index.html';
-        });
-      </script>
+      <p onclick="SD()"><strong>Video URL (SD):</strong> <a id="videoUrl" href="#" target="_blank" >Download</a></p>
+      <p onclick="HD()"><strong>Video URL (HD):</strong> <a id="videoHD" href="#" target="_blank">Download</a></p>
     </div>
 
     <div id="error" class="error" style="display: none;"></div> 
@@ -49,51 +39,37 @@
   </div>
   <script src="./js/loading.js"></script>
   <script>
-    document.getElementById('tiktokForm').addEventListener('submit', async function(event) {
-      event.preventDefault();
-      const popup = document.getElementById('popup');
-      const url = document.getElementById('url').value;
-      // Show the popup
-      popup.classList.remove('hidden');
-    
-      try {
-    
-        const response = await fetch('/.netlify/functions/api/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ url }),
-        });
-    
-        const data = await response.json();
-    
-        if (data.status === 'success') {
-          document.getElementById('result').style.display = 'block';
-          document.getElementById('videoUrl').href = data.videoUrl;
-          document.getElementById('videoHD').href = data.videoHD;
-          document.getElementById('error').style.display = 'none';
-          setTimeout(() => {
-            popup.classList.add('hidden');
-          }, 3000);
-        } else {
-          document.getElementById('error').innerText = data.error || 'An error occurred';
-          document.getElementById('error').style.display = 'block';
-          document.getElementById('result').style.display = 'none';
-          setTimeout(() => {
-            popup.classList.add('hidden');
-          }, 3000);
-        }
-      } catch (error) {
-        document.getElementById('error').innerText = 'Failed to download video try another url';
-        document.getElementById('error').style.display = 'block';
-        document.getElementById('result').style.display = 'none';
-        setTimeout(() => {
-          popup.classList.add('hidden');
-        }, 3000);
-      }
-    });
-    
+    function SD() {
+      // Get the download link for the SD video
+      const videoLink = document.getElementById("videoUrl").href;
+  
+      // Start the download by simulating a click on the download link
+      const downloadLink = document.createElement('a');
+      downloadLink.href = videoLink;
+      downloadLink.download = '';  // This will trigger the download
+      downloadLink.click();
+  
+      // Redirect to the thank you page after a short delay (to allow download to begin)
+      setTimeout(function() {
+        window.location.href = './thanku.html';
+      }, 2000); // Delay of 2 seconds before redirecting
+    }
+    function HD() {
+      // Get the download link for the SD video
+      const videoLink = document.getElementById("videoHD").href;
+  
+      // Start the download by simulating a click on the download link
+      const downloadLink = document.createElement('a');
+      downloadLink.href = videoLink;
+      downloadLink.download = '';  // This will trigger the download
+      downloadLink.click();
+  
+      // Redirect to the thank you page after a short delay (to allow download to begin)
+      setTimeout(function() {
+        window.location.href = './thanku.html';
+      }, 2000); // Delay of 2 seconds before redirecting
+    }
   </script>
+  
 </body>
 </html>
